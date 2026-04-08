@@ -30,8 +30,10 @@ public final class Navigation: ObservableObject {
     }
     
     func removeLast() {
-        path.removeLast()
-        comparables.removeLast()
+        if comparables.count > 0 {
+            path.removeLast()
+            comparables.removeLast()
+        }
     }
     
     func replace(_ newNavigation: Navigation) {

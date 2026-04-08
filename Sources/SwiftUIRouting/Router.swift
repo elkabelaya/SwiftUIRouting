@@ -96,7 +96,7 @@ public extension Router {
             state.presentingAlert = nil
         } else if state.isPresented != nil {
             state.isPresented?.wrappedValue = false
-        } else if navigation.path.count > 1 {
+        } else {
             navigation.removeLast()
         }
     }
