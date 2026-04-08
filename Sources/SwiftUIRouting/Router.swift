@@ -67,12 +67,16 @@ public extension Router {
         navigation.topSingle(comparable)
     }
     
+    func replaceTop(_ routing: Routing) {
+        self.navigation.replaceTop(routing)
+    }
+    
     func navigateBack() {
         navigation.removeLast()
     }
     
-    func replaceNavigation(_ navigation: Navigation) {
-        self.navigation.replace(navigation)
+    func replaceNavigation(_ routings: [Routing]) {
+        self.navigation.replace(routings)
     }
     
     func presentSheet(_ routing: Routing) {

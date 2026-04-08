@@ -4,10 +4,16 @@
 
 Opportunities:
 - Navigation:
-<img src="navigation.gif" height="700">
+<img src="./Readme/navigation.gif" height="700">
 
 - Separate Route chains:
-<img src="separate.gif" height="700">
+<img src="./Readme/separate.gif" height="700">
 
 - Pop-to-approot/Pop-to-routerroot:
-<img src="pop.gif" height="700">
+<img src="./Readme/pop.gif" height="700">
+
+- Single view in stack/Single view on top:
+<img src="./Readme/single.gif" height="700">
+
+- Replace navigation stack:
+<img src="./Readme/replace.gif" height="700">

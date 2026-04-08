@@ -6,17 +6,26 @@
 //
 
 import SwiftUI
+import Combine
 
-public final class Navigation: ObservableObject {
+@MainActor public final class Navigation: ObservableObject {
     @Published internal var path: NavigationPath = NavigationPath()
     fileprivate var comparables: [(any RouteComparable)?] = []
+    private var cancellable: AnyCancellable?
     
     public init() {
+        cancellable = $path.sink { [weak self] newValue in
+            guard let self else { return }
+            if newValue.count < comparables.count {
+                comparables = Array(comparables.prefix(newValue.count))
+            }
+        }
+        
     }
     
     private init(path: NavigationPath, comparables: [(any RouteComparable)?]) {
-        self.path = path
         self.comparables = comparables
+        self.path = path
     }
     
     func copy() -> Navigation {
@@ -24,26 +33,36 @@ public final class Navigation: ObservableObject {
     }
     
     func append(_ route: any Routable) {
-        path.append(route)
         let comparable = route as? any RouteComparable
         comparables.append(comparable)
+        path.append(route)
+    }
+    
+    func appendPath(_ routes: [any Routable]) {
+        routes.forEach(append)
     }
     
     func removeLast() {
         if comparables.count > 0 {
-            path.removeLast()
             comparables.removeLast()
+            path.removeLast()
+            
         }
     }
     
-    func replace(_ newNavigation: Navigation) {
-        path = newNavigation.path
-        comparables = newNavigation.comparables
+    func replace(_ routes: [any Routable]) {
+        self.reset()
+        routes.forEach(self.append)
+    }
+    
+    func replace(_ navigation: Navigation) {
+        comparables = navigation.comparables
+        path = navigation.path
     }
     
     func reset() {
-        path = .init()
         comparables = []
+        path = .init()
     }
     
     func replaceSingle(_ route: any RouteComparable, with initial: Navigation) {
@@ -52,8 +71,10 @@ public final class Navigation: ObservableObject {
             if let comparable: any RouteComparable = comparables[index],
                let comparableId = comparable.rootId,
                 comparableId == route.rootId {
-                path.removeLast(comparables.count - index)
-                comparables = Array(comparables.prefix(index + 1))
+                let countToRemove = comparables.count - index
+                comparables = Array(comparables.prefix(index))
+                self.path.removeLast(countToRemove)
+                
                 break
             }
         }
@@ -66,9 +87,14 @@ public final class Navigation: ObservableObject {
            let comparableId = comparable.rootId,
             comparableId == route.rootId {
             comparables = Array(comparables.prefix(comparables.count - 1))
-            path.removeLast()
+            self.path.removeLast()
         }
         
+        append(route)
+    }
+    
+    func replaceTop(_ route: any Routable) {
+        removeLast()
         append(route)
     }
 }
