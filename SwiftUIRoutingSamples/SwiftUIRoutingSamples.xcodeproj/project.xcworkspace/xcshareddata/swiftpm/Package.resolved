@@ -1,0 +1,15 @@
+{
+  "originHash" : "2fc408702722b2417fa5aa6ef9d8b6d8cee5f24ac933552351e1c05c6663ff8c",
+  "pins" : [
+    {
+      "identity" : "swiftuirouting",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/elkabelaya/SwiftUIRouting.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "1f707ed8eff5d820f98b47b3db26abd640284098"
+      }
+    }
+  ],
+  "version" : 3
+}

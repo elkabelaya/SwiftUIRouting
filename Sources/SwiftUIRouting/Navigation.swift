@@ -10,7 +10,7 @@ import Combine
 
 @MainActor public final class Navigation: ObservableObject {
     @Published internal var path: NavigationPath = NavigationPath()
-    fileprivate var comparables: [(any RouteComparable)?] = []
+    internal var comparables: [(any RouteComparable)?] = []
     private var cancellable: AnyCancellable?
     
     public init() {
@@ -67,15 +67,18 @@ import Combine
     
     func replaceSingle(_ route: any RouteComparable, with initial: Navigation) {
         let initialComparables: [(any RouteComparable)?] = initial.comparables
-        for index in (max(initialComparables.count - 1, 0)..<comparables.count - 1) {
-            if let comparable: any RouteComparable = comparables[index],
-               let comparableId = comparable.rootId,
-                comparableId == route.rootId {
-                let countToRemove = comparables.count - index
-                comparables = Array(comparables.prefix(index))
-                self.path.removeLast(countToRemove)
-                
-                break
+        let initialIndex = max(initialComparables.count - 1, 0)
+        if comparables.count > initialIndex {
+            for index in (initialIndex..<comparables.count - 1) {
+                if let comparable: any RouteComparable = comparables[index],
+                   let comparableId = comparable.rootId,
+                   comparableId == route.rootId {
+                    let countToRemove = comparables.count - index
+                    comparables = Array(comparables.prefix(index))
+                    self.path.removeLast(countToRemove)
+                    
+                    break
+                }
             }
         }
         
