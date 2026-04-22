@@ -22,7 +22,7 @@ let package = Package(
         .testTarget(
             name: "SwiftUIRoutingTests",
             dependencies: ["SwiftUIRouting"]
-        ),
+        )
     ],
     swiftLanguageModes: [.v6]
 )
